@@ -1,51 +1,35 @@
 pipeline {
     agent any
+
     stages {
-        stage("Clean Up") {
+        stage("Checkout") {
             steps {
-                echo "Cleaning up the workspace..."
-                deleteDir()
+                checkout scm
             }
         }
-        stage("Clone Repository") {
+
+        stage("Build Image") {
             steps {
-                sh "git clone https://github.com/iamthephd/jenkins-practice.git"
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                dir('jenkins-practice') {
-                sh '''
-                uv venv
-                source .venv/bin/activate
-                uv pip install -r requirements.txt
-                '''
+                script {
+                    sh "docker build -t simple-project:latest ."
                 }
             }
         }
 
-        stage('Start Application') {
+        stage("Run Container") {
             steps {
-                dir('jenkins-practice') {
-                sh '''
-                source .venv/bin/activate
-                python main.py &
-                sleep 5
-                '''
+                script {
+                    sh "docker run -d --name simple-project-container -p 8080:8080 simple-project:latest"
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage("Test") {
             steps {
-                dir('jenkins-practice') {
-                sh '''
-                source .venv/bin/activate
-                python test.py
-                '''
+                script {
+                    sh "curl http://localhost:8080"
                 }
             }
-        }
         }
     }
+}
