@@ -30,6 +30,7 @@ pipeline {
         stage("Test") {
             steps {
                 script {
+                    sleep 10 // Wait for the container to start
                     sh "curl http://localhost:8000"
                 }
             }
