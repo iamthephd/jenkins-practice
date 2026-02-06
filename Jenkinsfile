@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     // Stop and remove any existing container with the same name
+                    sh "echo 'Inside branch 2'"
                     sh "docker stop ${CONTAINER_NAME} || true"
                     sh "docker rm ${CONTAINER_NAME} || true"
                     sh "docker run -d --rm --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}:latest"
