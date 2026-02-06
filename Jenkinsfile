@@ -19,7 +19,7 @@ pipeline {
         stage("Run Container") {
             steps {
                 script {
-                    sh "docker run -d --name simple-project-container -p 8080:8080 simple-project:latest"
+                    sh "docker run -d --name simple-project-container -p 8000:8000 simple-project:latest"
                 }
             }
         }
